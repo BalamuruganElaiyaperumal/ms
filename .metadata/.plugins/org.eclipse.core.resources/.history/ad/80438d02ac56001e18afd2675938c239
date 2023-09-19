@@ -1,0 +1,22 @@
+package com.test.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.test.dao.OrderDao;
+import com.test.entity.Order;
+
+@Service
+public class OrderService {
+	@Autowired
+	
+	OrderDao od;
+
+	public String setAll(List<Order> a) {
+		return od.setAll(a);
+	}
+	
+
+}

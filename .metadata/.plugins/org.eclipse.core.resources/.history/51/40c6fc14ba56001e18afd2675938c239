@@ -1,0 +1,35 @@
+package com.example.demo
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+@Configuration
+@EnableWebSecurity
+public class AccesDetails extends WebSecurityConfigurerAdapter {
+
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.inMemoryAuthentication().withUser("Bala")
+				.password("$2a$12$fyAtkZbWa2LNmCkZ6hcUAueOIAMMu9L.Aj4HMiJz7ugUnPk3kEfmW").roles("Principal").and()
+				.withUser("Chandru").password("$2a$12$8OP1CQA6ZqgsmeM9704q5O86wz3Dl4B3/TEvob9eI1E5P1abyLDse")
+				.roles("Teacher").and().withUser("Raja")
+				.password("$2a$12$8L2O3/3Tt5sG6k1HeVjHJ.xn.OU8JKEwujfmO1AUg6..x96Sd01fO").roles("Student");
+
+	}
+
+	public void configure(HttpSecurity http) throws Exception {
+		http.authorizeRequests().antMatchers("/principal").hasAnyRole("Principal", "Teacher","Student");
+		http.authorizeRequests().antMatchers("/teacher").hasRole("Teacher");
+		http.authorizeRequests().antMatchers("/student").permitAll().and().formLogin();
+	}
+
+	@Bean
+	public PasswordEncoder setBycrypt() {
+		return new BCryptPasswordEncoder(12);
+	}
+
+}
